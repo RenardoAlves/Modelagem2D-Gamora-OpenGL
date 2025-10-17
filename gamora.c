@@ -101,10 +101,18 @@ void DesenhaCorpo() {
     // Tronco
     glColor3ub(0,0,0);
     glBegin(GL_POLYGON);
-        glVertex2f(-1.2f, 6.8f);
-        glVertex2f(1.2f, 6.8f);
+        glVertex2f(-1.2f, 6.0f);
+        glVertex2f(1.2f, 6.0f);
         glVertex2f(1.0f, 2.5f);
         glVertex2f(-1.0f, 2.5f);
+    glEnd();
+
+    // Detalhes do uniforme
+    glColor3ub(102, 255, 102);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(0.0f, 2.5f);
+        glVertex2f(-1.20f, 6.0f);
+        glVertex2f(1.20f, 6.0f);
     glEnd();
 
     // Cinto
@@ -186,6 +194,7 @@ void DesenhaPernaDireita() {
 }
 
 void DesenhaPernaEsquerda() {
+
     glColor3ub(102,255,102);
     glBegin(GL_QUADS);
         glVertex2f(-0.4f, 2.5f);
@@ -216,8 +225,8 @@ void DesenhaCapa() {
 //Desenho completo
 void DesenhaGamora() {
     DesenhaCapa();
-    DesenhaCorpo();
     DesenhaCabeca();
+    DesenhaCorpo();
     DesenhaBracoDireito();
     DesenhaBracoEsquerdo();
     DesenhaPernaDireita();
