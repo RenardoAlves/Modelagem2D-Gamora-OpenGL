@@ -24,10 +24,10 @@ void DesenhaCabeca() {
     // Pescoço
     glColor3ub(179, 228, 146);
     glBegin(GL_QUADS);
-        glVertex2f(-0.35f, 6.2f);
+        glVertex2f(-0.35f, 6.3f);
         glVertex2f(-0.35f, 6.0f);
         glVertex2f(0.35f, 6.0f);
-        glVertex2f(0.35f, 6.2f);
+        glVertex2f(0.35f, 6.3f);
     glEnd();
 
     // Rosto
@@ -270,7 +270,7 @@ void Display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
     DesenhaGamora();
-    glFlush();
+    glutSwapBuffers();
 }
 
 void Inicializa() {
@@ -280,13 +280,27 @@ void Inicializa() {
     glMatrixMode(GL_MODELVIEW);
 }
 
+// Função de callback para redimensionamento
+void Redimensionar(int w, int h) {
+    if (w == h) {
+        glViewport(0, 0, w, h);
+    } else if (w > h) {
+        int x = (w - h) / 2;
+        glViewport(x, 0, h, h);
+    } else {
+        int y = (h - w) / 2;
+        glViewport(0, y, w, w);
+    }
+}
+
 int main(int argc, char **argv) {
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(800, 800);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitWindowSize(1080, 1080);
     glutCreateWindow("Gamora 2D - Versao HQ");
     Inicializa();
     glutDisplayFunc(Display);
+    glutReshapeFunc(Redimensionar);
     glutMainLoop();
     return 0;
 }
