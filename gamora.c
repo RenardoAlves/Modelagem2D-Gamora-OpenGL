@@ -4,7 +4,7 @@ void DesenhaCabeca() {
     // Cabelo
     glColor3ub(54, 159, 77);
     glBegin(GL_POLYGON);
-        glVertex2f(-0.76f, 8.44f);
+        glVertex2f(-0.76f, 8.40f);
         glVertex2f(-1.2f, 7.66f);
         glVertex2f(-1.35f, 6.85f);
         glVertex2f(-1.45f, 5.91f);
@@ -17,8 +17,17 @@ void DesenhaCabeca() {
         glVertex2f(1.39f, 6.62f);
         glVertex2f(1.34f, 7.47f);
         glVertex2f(1.13f, 7.94f);
-        glVertex2f(0.82f, 8.44f);
-        glVertex2f(0.03f, 8.81f);
+        glVertex2f(0.82f, 8.40f);
+        glVertex2f(0.03f, 8.72f);
+    glEnd();
+
+    // Pescoço
+    glColor3ub(179, 228, 146);
+    glBegin(GL_QUADS);
+        glVertex2f(-0.35f, 6.2f);
+        glVertex2f(-0.35f, 6.0f);
+        glVertex2f(0.35f, 6.0f);
+        glVertex2f(0.35f, 6.2f);
     glEnd();
 
     // Rosto
@@ -26,14 +35,14 @@ void DesenhaCabeca() {
     glBegin(GL_POLYGON);
         glVertex2f(0.0f, 8.5f);
         glVertex2f(-0.57f, 8.29f);
-        glVertex2f(-0.98f, 7.74f);
-        glVertex2f(-0.86f, 7.07f);
-        glVertex2f(-0.62f, 6.40f);
+        glVertex2f(-0.95f, 7.79f);
+        glVertex2f(-0.90f, 7.07f);
+        glVertex2f(-0.63f, 6.40f);
         glVertex2f(0.0f, 6.0f);
         glVertex2f(0.63f, 6.40f);
-        glVertex2f(0.93f, 7.20f);
+        glVertex2f(0.90f, 7.07f);
         glVertex2f(0.95f, 7.79f);
-        glVertex2f(0.60f, 8.36f);
+        glVertex2f(0.60f, 8.29f);
     glEnd();
 
     // Olhos
@@ -45,20 +54,20 @@ void DesenhaCabeca() {
         glVertex2f(-0.43f, 7.77f);
         glVertex2f(-0.35f, 7.73f);
         glVertex2f(-0.34f, 7.69f);
-        glVertex2f(-0.41f, 7.647f);
-        glVertex2f(-0.51f, 7.645f);
+        glVertex2f(-0.41f, 7.64f);
+        glVertex2f(-0.51f, 7.64f);
         glVertex2f(-0.58f, 7.67f);
     glEnd();
     // Olho esquerdo
     glBegin(GL_POLYGON);
-        glVertex2f(0.34f, 7.72f);
-        glVertex2f(0.42f, 7.76f);
-        glVertex2f(0.51f, 7.76f);
-        glVertex2f(0.59f, 7.72f);
-        glVertex2f(0.60f, 7.68f);
+        glVertex2f(0.34f, 7.73f);
+        glVertex2f(0.42f, 7.77f);
+        glVertex2f(0.51f, 7.77f);
+        glVertex2f(0.59f, 7.73f);
+        glVertex2f(0.60f, 7.69f);
         glVertex2f(0.53f, 7.64f);
-        glVertex2f(0.43f, 7.637f);
-        glVertex2f(0.36f, 7.66f);
+        glVertex2f(0.43f, 7.64f);
+        glVertex2f(0.36f, 7.67f);
     glEnd();
 
     glColor3ub(0, 0, 25);
@@ -79,6 +88,7 @@ void DesenhaCabeca() {
     glEnd();
 
     glColor3ub(169, 218, 136);
+
     // Nariz
     glBegin(GL_POLYGON);
         glVertex2f(-0.04f, 7.28f);
@@ -138,7 +148,6 @@ void DesenhaCorpo() {
 }
 
 void DesenhaBracoDireito() {
-    // Braço
     glColor3ub(102, 255, 102);
     glBegin(GL_QUADS);
         glVertex2f(1.2f, 6.0f);
@@ -166,6 +175,7 @@ void DesenhaBracoEsquerdo() {
         glVertex2f(-1.5f, 2.5f);
     glEnd();
 
+    // Luva
     glColor3ub(0,0,0);
     glBegin(GL_QUADS);
         glVertex2f(-1.5f, 2.5f);
@@ -184,6 +194,17 @@ void DesenhaPernaDireita() {
         glVertex2f(0.4f, -0.5f);
     glEnd();
 
+    // Detalhe do uniforme
+    glColor3ub(0,0,0);
+    glBegin(GL_POLYGON);
+        glVertex2f(1.0f, 2.5f);
+        glVertex2f(0.4f, 2.5f);
+        glVertex2f(0.4f, 1.6f);
+        glVertex2f(0.7f, 1.95f);
+        glVertex2f(1.0f, 1.6f);
+    glEnd();
+
+    // Bota
     glColor3ub(13,13,13);
     glBegin(GL_QUADS);
         glVertex2f(0.4f, -0.5f);
@@ -203,6 +224,17 @@ void DesenhaPernaEsquerda() {
         glVertex2f(-0.4f, -0.5f);
     glEnd();
 
+    // Detalhe do uniforme
+    glColor3ub(0,0,0);
+    glBegin(GL_POLYGON);
+        glVertex2f(-1.0f, 2.5f);
+        glVertex2f(-0.4f, 2.5f);
+        glVertex2f(-0.4f, 1.6f);
+        glVertex2f(-0.7f, 1.95f);
+        glVertex2f(-1.0f, 1.6f);
+    glEnd();
+
+    // Bota
     glColor3ub(13,13,13);
     glBegin(GL_QUADS);
         glVertex2f(-0.4f, -0.5f);
@@ -233,7 +265,7 @@ void DesenhaGamora() {
     DesenhaPernaEsquerda();
 }
 
-//Executando o OpenGL
+// Executando o OpenGL
 void Display() {
     glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
