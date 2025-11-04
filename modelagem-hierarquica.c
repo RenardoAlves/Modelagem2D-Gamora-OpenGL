@@ -38,6 +38,23 @@ typedef struct {
     Poligono peDir;
 } Personagem;
 
+// --- Ângulos para os movimentos gerais ---
+float tx = 0.0f, ty = 0.0f;
+float anguloGeral = 0.0f;
+float escala = 1.0f;
+float passoTrans = 0.2f;
+float passoRot = 5.0f;
+float passoEscala = 0.05f;
+
+// --- Ângulos locais das articulações ---
+float angBracoEsq = 0, angBracoDir = 0;
+float angAntebracoEsq = 0, angAntebracoDir = 0;
+float angMaoEsq = 0, angMaoDir = 0;
+float angPernaEsq = 0, angPernaDir = 0;
+float angPanturrilhaEsq = 0, angPanturrilhaDir = 0;
+float angPeEsq = 0, angPeDir = 0;
+float angCabeca = 0;
+
 // --- Funções ---
 Poligono LerPoligono(const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "r");
@@ -77,20 +94,24 @@ void DesenhaPoligono(Poligono p) {
 void DesenhaPersonagemHier(Personagem p) {
     glPushMatrix();
 
+        glTranslatef(tx, ty, 0);
+        glRotatef(anguloGeral, 0, 0, 1);
+        glScalef(escala, escala, 1);
+
         // Perna esquerda
         glPushMatrix();
             glTranslatef(-0.54, -0.58, 0); // quadril
-            glRotatef(0, 0, 0, 1);
+            glRotatef(angPernaEsq, 0, 0, 1); // Ângulo para rotação da perna esq.
             DesenhaPoligono(p.coxaEsq);
 
             glPushMatrix();
                 glTranslatef(-1.26, -3.55, 0); // joelho
-                glRotatef(0, 0, 0, 1);
+                glRotatef(angPanturrilhaEsq, 0, 0, 1); // Ângulo para rotação do joelho esq.
                 DesenhaPoligono(p.panturrilhaEsq);
 
                 glPushMatrix();
                     glTranslatef(-1.0, -2.83, 0); // pé
-                    glRotatef(0, 0, 0, 1);
+                    glRotatef(angPeEsq, 0, 0, 1); // Ângulo para rotação do pé esq.
                     DesenhaPoligono(p.peEsq);
                 glPopMatrix();
             glPopMatrix();
@@ -99,17 +120,17 @@ void DesenhaPersonagemHier(Personagem p) {
         // Perna direita
         glPushMatrix();
             glTranslatef(0.54, -0.58, 0); // quadril
-            glRotatef(0, 0, 0, 1);
+            glRotatef(angPernaDir, 0, 0, 1); // Ângulo para rotação da perna dir.
             DesenhaPoligono(p.coxaDir);
 
             glPushMatrix();
                 glTranslatef(1.26, -3.55, 0); // joelho
-                glRotatef(0, 0, 0, 1);
+                glRotatef(angPanturrilhaDir, 0, 0, 1); // Ângulo para rotação do joelho dir.
                 DesenhaPoligono(p.panturrilhaDir);
 
                 glPushMatrix();
                     glTranslatef(1.0, -2.83, 0); // pé
-                    glRotatef(0, 0, 0, 1);
+                    glRotatef(angPeDir, 0, 0, 1); // Ângulo para rotação do pé dir.
                     DesenhaPoligono(p.peDir);
                 glPopMatrix();
             glPopMatrix();
@@ -120,7 +141,8 @@ void DesenhaPersonagemHier(Personagem p) {
 
         // Cabeça (posição relativa ao corpo)
         glPushMatrix();
-            glTranslatef(0, 3.17, 0); // ajuste conforme o ponto de articulação do pescoço
+            glTranslatef(0, 3.17, 0);
+            glRotatef(angCabeca, 0, 0, 1); // Ângulo para rotação no pescoço
             DesenhaPoligono(p.cabelo);
             DesenhaPoligono(p.cabeca);
             DesenhaPoligono(p.nariz);
@@ -135,17 +157,17 @@ void DesenhaPersonagemHier(Personagem p) {
         // Braço esquerdo
         glPushMatrix();
             glTranslatef(-0.81, 2.77, 0); // ombro
-            glRotatef(0, 0, 0, 1);  // ângulo inicial
+            glRotatef(angBracoEsq, 0, 0, 1); // Ângulo para rotação no ombo esq.
             DesenhaPoligono(p.bracoEsq);
 
             glPushMatrix();
                 glTranslatef(-0.69, -0.03, 0); // cotovelo
-                glRotatef(0, 0, 0, 1);
+                glRotatef(angAntebracoEsq, 0, 0, 1); // Ângulo para rotação no cotovelo esq.
                 DesenhaPoligono(p.antebracoEsq);
 
                 glPushMatrix();
                     glTranslatef(-0.62, 0.26, 0); // mão
-                    glRotatef(0, 0, 0, 1);
+                    glRotatef(angMaoEsq, 0, 0, 1); // Ângulo para rotação na mão esq.
                     DesenhaPoligono(p.maoEsq);
                 glPopMatrix();
             glPopMatrix();
@@ -154,17 +176,17 @@ void DesenhaPersonagemHier(Personagem p) {
         // Braço direito
         glPushMatrix();
             glTranslatef(0.81, 2.77, 0); // ombro
-            glRotatef(0, 0, 0, 1);
+            glRotatef(angBracoDir, 0, 0, 1); // Ângulo para rotação no ombro dir.
             DesenhaPoligono(p.bracoDir);
 
             glPushMatrix();
                 glTranslatef(0.69, -0.03, 0); // cotovelo
-                glRotatef(0, 0, 0, 1);
+                glRotatef(angAntebracoDir, 0, 0, 1); // Ângulo para rotação no cotovelo dir.
                 DesenhaPoligono(p.antebracoDir);
 
                 glPushMatrix();
                     glTranslatef(0.62, 0.26, 0); // mão
-                    glRotatef(0, 0, 0, 1);
+                    glRotatef(angMaoDir, 0, 0, 1); // Ângulo para rotação na mão dir.
                     DesenhaPoligono(p.maoDir);
                 glPopMatrix();
             glPopMatrix();
@@ -181,6 +203,75 @@ void Display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     DesenhaPersonagemHier(personagem);
     glFlush();
+}
+
+void Teclado(unsigned char key, int x, int y) {
+    switch (key) {
+        // --- Translação ---
+        case 'w': ty += passoTrans; break;
+        case 's': ty -= passoTrans; break;
+        case 'a': tx -= passoTrans; break;
+        case 'd': tx += passoTrans; break;
+
+        // --- Rotação ---
+        case 'q': anguloGeral += passoRot; break;
+        case 'e': anguloGeral -= passoRot; break;
+
+        // --- Escala ---
+        case 'z': escala += passoEscala; break;
+        case 'x': escala -= passoEscala; 
+                  if (escala < 0.1f) escala = 0.1f; 
+                  break;
+
+        // --- Reset ---
+        case '3':
+            tx = ty = anguloGeral = 0;
+            escala = 1.0f;
+            break;
+
+        // --- Movimentos locais ---
+        case 'r': angBracoEsq += 5; break;
+        case 't': angBracoEsq -= 5; break;
+
+        case 'f': angAntebracoEsq += 5; break;
+        case 'g': angAntebracoEsq -= 5; break;
+
+        case 'v': angMaoEsq += 5; break;
+        case 'b': angMaoEsq -= 5; break;
+
+        case 'y': angBracoDir += 5; break;
+        case 'u': angBracoDir -= 5; break;
+
+        case 'h': angAntebracoDir += 5; break;
+        case 'j': angAntebracoDir -= 5; break;
+
+        case 'n': angMaoDir += 5; break;
+        case 'm': angMaoDir -= 5; break;
+
+        case 'i': angPernaEsq += 5; break;
+        case 'o': angPernaEsq -= 5; break;
+
+        case 'k': angPanturrilhaEsq += 5; break;
+        case 'l': angPanturrilhaEsq -= 5; break;
+
+        case ',': angPeEsq += 5; break;
+        case '.': angPeEsq -= 5; break;
+
+        case '7': angPernaDir += 5; break;
+        case '8': angPernaDir -= 5; break;
+
+        case '4': angPanturrilhaDir += 5; break;
+        case '5': angPanturrilhaDir -= 5; break;
+
+        case '1': angPeDir += 5; break;
+        case '2': angPeDir -= 5; break;
+
+        case '9': angCabeca += 5; break;
+        case '6': angCabeca -= 5; break;
+
+    }
+
+    glutPostRedisplay(); // redesenha após qualquer tecla
 }
 
 // --- Inicialização OpenGL ---
@@ -224,6 +315,7 @@ int main(int argc, char **argv) {
     glutCreateWindow("Personagem Hierarquico");
     Inicializa();
     glutDisplayFunc(Display);
+    glutKeyboardFunc(Teclado);
     glutMainLoop();
 
     return 0;
