@@ -71,12 +71,12 @@ void Display(void){
 void Inicializa(void) {
     glClearColor(1.0, 1.0, 1.0, 1.0); // fundo branco
     glMatrixMode(GL_PROJECTION);
-    gluOrtho2D(-2.0, 2.0, -2.0, 2.0);
+    gluOrtho2D(-10.0, 10.0, -10.0, 10.0);
 }
 
 // Programa principal
 int main(int argc, char **argv) {
-    LerTxt("coordenadas.txt");
+    LerTxt("pe-esquerdo.txt");
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
