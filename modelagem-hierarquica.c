@@ -38,6 +38,12 @@ typedef struct {
     Poligono peDir;
 } Personagem;
 
+typedef struct{
+    Poligono chao;
+    Poligono planeta1;
+    Poligono planeta2;
+} Cenario;
+
 // --- Ângulos para os movimentos gerais ---
 float tx = 0.0f, ty = 0.0f;
 float anguloGeral = 0.0f;
@@ -157,7 +163,7 @@ void DesenhaPersonagemHier(Personagem p) {
         // Braço esquerdo
         glPushMatrix();
             glTranslatef(-0.81, 2.77, 0); // ombro
-            glRotatef(angBracoEsq, 0, 0, 1); // Ângulo para rotação no ombo esq.
+            glRotatef(angBracoEsq, 0, 0, 1); // Ângulo para rotação no ombro esq.
             DesenhaPoligono(p.bracoEsq);
 
             glPushMatrix();
@@ -195,12 +201,20 @@ void DesenhaPersonagemHier(Personagem p) {
     glPopMatrix();
 }
 
+void DesenhaCenario(Cenario c){
+    DesenhaPoligono(c.chao);
+    DesenhaPoligono(c.planeta1);
+    DesenhaPoligono(c.planeta2);
+}
+
 // --- Variável global ---
 Personagem personagem;
+Cenario cenario;
 
 // --- Display ---
 void Display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
+    DesenhaCenario(cenario);
     DesenhaPersonagemHier(personagem);
     glFlush();
 }
@@ -276,7 +290,7 @@ void Teclado(unsigned char key, int x, int y) {
 
 // --- Inicialização OpenGL ---
 void Inicializa(void) {
-    glClearColor(1, 1, 1, 1);
+    glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(-10, 10, -10, 10);
@@ -308,6 +322,10 @@ int main(int argc, char **argv) {
     personagem.irisEsq = LerPoligono("iris_esq.txt");
     personagem.olhoDir = LerPoligono("cont_olho_dir.txt");
     personagem.irisDir = LerPoligono("iris_dir.txt");
+
+    cenario.chao = LerPoligono("chao.txt");
+    cenario.planeta1 = LerPoligono("planeta1.txt");
+    cenario.planeta2 = LerPoligono("planeta2.txt");
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
