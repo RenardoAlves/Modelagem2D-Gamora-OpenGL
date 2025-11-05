@@ -24,6 +24,7 @@ typedef struct {
     Poligono olhoDir;
     Poligono irisDir;
     Poligono corpo;
+    Poligono uniforme;
     Poligono bracoEsq;
     Poligono antebracoEsq;
     Poligono maoEsq;
@@ -144,20 +145,25 @@ void DesenhaPersonagemHier(Personagem p) {
 
         // Corpo como referência central
         DesenhaPoligono(p.corpo);
+        DesenhaPoligono(p.uniforme);
 
-        // Cabeça (posição relativa ao corpo)
+        // Braço direito
         glPushMatrix();
-            glTranslatef(0, 3.17, 0);
-            glRotatef(angCabeca, 0, 0, 1); // Ângulo para rotação no pescoço
-            DesenhaPoligono(p.cabelo);
-            DesenhaPoligono(p.cabeca);
-            DesenhaPoligono(p.nariz);
-            DesenhaPoligono(p.bocaCima);
-            DesenhaPoligono(p.bocaBaixo);
-            DesenhaPoligono(p.olhoEsq);
-            DesenhaPoligono(p.irisEsq);
-            DesenhaPoligono(p.olhoDir);
-            DesenhaPoligono(p.irisDir);
+            glTranslatef(0.81, 2.77, 0); // ombro
+            glRotatef(angBracoDir, 0, 0, 1); // Ângulo para rotação no ombro dir.
+            DesenhaPoligono(p.bracoDir);
+
+            glPushMatrix();
+                glTranslatef(0.69, -0.03, 0); // cotovelo
+                glRotatef(angAntebracoDir, 0, 0, 1); // Ângulo para rotação no cotovelo dir.
+                DesenhaPoligono(p.antebracoDir);
+
+                glPushMatrix();
+                    glTranslatef(0.62, 0.26, 0); // mão
+                    glRotatef(angMaoDir, 0, 0, 1); // Ângulo para rotação na mão dir.
+                    DesenhaPoligono(p.maoDir);
+                glPopMatrix();
+            glPopMatrix();
         glPopMatrix();
 
         // Braço esquerdo
@@ -179,23 +185,19 @@ void DesenhaPersonagemHier(Personagem p) {
             glPopMatrix();
         glPopMatrix();
 
-        // Braço direito
+        // Cabeça (posição relativa ao corpo)
         glPushMatrix();
-            glTranslatef(0.81, 2.77, 0); // ombro
-            glRotatef(angBracoDir, 0, 0, 1); // Ângulo para rotação no ombro dir.
-            DesenhaPoligono(p.bracoDir);
-
-            glPushMatrix();
-                glTranslatef(0.69, -0.03, 0); // cotovelo
-                glRotatef(angAntebracoDir, 0, 0, 1); // Ângulo para rotação no cotovelo dir.
-                DesenhaPoligono(p.antebracoDir);
-
-                glPushMatrix();
-                    glTranslatef(0.62, 0.26, 0); // mão
-                    glRotatef(angMaoDir, 0, 0, 1); // Ângulo para rotação na mão dir.
-                    DesenhaPoligono(p.maoDir);
-                glPopMatrix();
-            glPopMatrix();
+            glTranslatef(0, 3.17, 0);
+            glRotatef(angCabeca, 0, 0, 1); // Ângulo para rotação no pescoço
+            DesenhaPoligono(p.cabelo);
+            DesenhaPoligono(p.cabeca);
+            DesenhaPoligono(p.nariz);
+            DesenhaPoligono(p.bocaCima);
+            DesenhaPoligono(p.bocaBaixo);
+            DesenhaPoligono(p.olhoEsq);
+            DesenhaPoligono(p.irisEsq);
+            DesenhaPoligono(p.olhoDir);
+            DesenhaPoligono(p.irisDir);
         glPopMatrix();
 
     glPopMatrix();
@@ -240,48 +242,120 @@ void Teclado(unsigned char key, int x, int y) {
         // --- Reset ---
         case '3':
             tx = ty = anguloGeral = 0;
+            angBracoEsq = 0, angBracoDir = 0;
+            angAntebracoEsq = 0, angAntebracoDir = 0;
+            angMaoEsq = 0, angMaoDir = 0;
+            angPernaEsq = 0, angPernaDir = 0;
+            angPanturrilhaEsq = 0, angPanturrilhaDir = 0;
+            angPeEsq = 0, angPeDir = 0;
+            angCabeca = 0;
+
             escala = 1.0f;
             break;
 
-        // --- Movimentos locais ---
-        case 'r': angBracoEsq += 5; break;
-        case 't': angBracoEsq -= 5; break;
+// Braço Esquerdo
+        case 'r':
+            if (angBracoEsq < 90) angBracoEsq += 5;
+            break;
+        case 't':
+            if (angBracoEsq > -30) angBracoEsq -= 5;
+            break;
 
-        case 'f': angAntebracoEsq += 5; break;
-        case 'g': angAntebracoEsq -= 5; break;
+        // Antebraço Esquerdo
+        case 'f':
+            if (angAntebracoEsq < 100) angAntebracoEsq += 5;
+            break;
+        case 'g':
+            if (angAntebracoEsq > 0) angAntebracoEsq -= 5;
+            break;
 
-        case 'v': angMaoEsq += 5; break;
-        case 'b': angMaoEsq -= 5; break;
+        // Mão Esquerda
+        case 'v':
+            if (angMaoEsq < 45) angMaoEsq += 5;
+            break;
+        case 'b':
+            if (angMaoEsq > -45) angMaoEsq -= 5;
+            break;
 
-        case 'y': angBracoDir += 5; break;
-        case 'u': angBracoDir -= 5; break;
+        // Braço Direito
+        case 'y':
+            if (angBracoDir < 90) angBracoDir += 5;
+            break;
+        case 'u':
+            if (angBracoDir > -30) angBracoDir -= 5;
+            break;
 
-        case 'h': angAntebracoDir += 5; break;
-        case 'j': angAntebracoDir -= 5; break;
+        // Antebraço Direito
+        case 'h':
+            if (angAntebracoDir < 100) angAntebracoDir += 5;
+            break;
+        case 'j':
+            if (angAntebracoDir > 0) angAntebracoDir -= 5;
+            break;
 
-        case 'n': angMaoDir += 5; break;
-        case 'm': angMaoDir -= 5; break;
+        // Mão Direita
+        case 'n':
+            if (angMaoDir < 45) angMaoDir += 5;
+            break;
+        case 'm':
+            if (angMaoDir > -45) angMaoDir -= 5;
+            break;
 
-        case 'i': angPernaEsq += 5; break;
-        case 'o': angPernaEsq -= 5; break;
+        // Perna Esquerda
+        case 'i':
+            if (angPernaEsq < 60) angPernaEsq += 5;
+            break;
+        case 'o':
+            if (angPernaEsq > -30) angPernaEsq -= 5;
+            break;
 
-        case 'k': angPanturrilhaEsq += 5; break;
-        case 'l': angPanturrilhaEsq -= 5; break;
+        // Panturrilha Esquerda
+        case 'k':
+            if (angPanturrilhaEsq < 90) angPanturrilhaEsq += 5;
+            break;
+        case 'l':
+            if (angPanturrilhaEsq > 0) angPanturrilhaEsq -= 5;
+            break;
 
-        case ',': angPeEsq += 5; break;
-        case '.': angPeEsq -= 5; break;
+        // Pé Esquerdo
+        case ',':
+            if (angPeEsq < 30) angPeEsq += 5;
+            break;
+        case '.':
+            if (angPeEsq > -15) angPeEsq -= 5;
+            break;
 
-        case '7': angPernaDir += 5; break;
-        case '8': angPernaDir -= 5; break;
+        // Perna Direita
+        case '7':
+            if (angPernaDir < 60) angPernaDir += 5;
+            break;
+        case '8':
+            if (angPernaDir > -30) angPernaDir -= 5;
+            break;
 
-        case '4': angPanturrilhaDir += 5; break;
-        case '5': angPanturrilhaDir -= 5; break;
+        // Panturrilha Direita
+        case '4':
+            if (angPanturrilhaDir < 90) angPanturrilhaDir += 5;
+            break;
+        case '5':
+            if (angPanturrilhaDir > 0) angPanturrilhaDir -= 5;
+            break;
 
-        case '1': angPeDir += 5; break;
-        case '2': angPeDir -= 5; break;
+        // Pé Direito
+        case '1':
+            if (angPeDir < 30) angPeDir += 5;
+            break;
+        case '2':
+            if (angPeDir > -15) angPeDir -= 5;
+            break;
 
-        case '9': angCabeca += 5; break;
-        case '6': angCabeca -= 5; break;
+        // Cabeça
+        case '9':
+            if (angCabeca < 45) angCabeca += 5;
+            break;
+        case '6':
+            if (angCabeca > -45) angCabeca -= 5;
+            break;
 
     }
 
@@ -312,7 +386,8 @@ int main(int argc, char **argv) {
     personagem.bracoDir = LerPoligono("braco_dir.txt");
     personagem.antebracoDir = LerPoligono("antebraco_dir.txt");
     personagem.maoDir = LerPoligono("mao_dir.txt");
-    personagem.corpo = LerPoligono("corpo_new.txt");
+    personagem.corpo = LerPoligono("corpo.txt");
+    personagem.uniforme = LerPoligono("uniforme.txt");
     personagem.cabelo = LerPoligono("cabelo.txt");
     personagem.cabeca = LerPoligono("cabeca.txt");
     personagem.nariz = LerPoligono("nariz.txt");
