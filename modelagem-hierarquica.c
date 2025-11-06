@@ -213,14 +213,6 @@ void DesenhaCenario(Cenario c){
 Personagem personagem;
 Cenario cenario;
 
-// --- Display ---
-void Display(void) {
-    glClear(GL_COLOR_BUFFER_BIT);
-    DesenhaCenario(cenario);
-    DesenhaPersonagemHier(personagem);
-    glFlush();
-}
-
 void Teclado(unsigned char key, int x, int y) {
     switch (key) {
         // --- Translação ---
@@ -253,20 +245,20 @@ void Teclado(unsigned char key, int x, int y) {
             escala = 1.0f;
             break;
 
-// Braço Esquerdo
+        // Braço Esquerdo
         case 'r':
-            if (angBracoEsq < 90) angBracoEsq += 5;
+            if (angBracoEsq < 80) angBracoEsq += 5;
             break;
         case 't':
-            if (angBracoEsq > -30) angBracoEsq -= 5;
+            if (angBracoEsq > -50) angBracoEsq -= 5;
             break;
 
         // Antebraço Esquerdo
         case 'f':
-            if (angAntebracoEsq < 100) angAntebracoEsq += 5;
+            if (angAntebracoEsq < 50) angAntebracoEsq += 5;
             break;
         case 'g':
-            if (angAntebracoEsq > 0) angAntebracoEsq -= 5;
+            if (angAntebracoEsq > -50) angAntebracoEsq -= 5;
             break;
 
         // Mão Esquerda
@@ -279,18 +271,18 @@ void Teclado(unsigned char key, int x, int y) {
 
         // Braço Direito
         case 'y':
-            if (angBracoDir < 90) angBracoDir += 5;
+            if (angBracoDir < 50) angBracoDir += 5;
             break;
         case 'u':
-            if (angBracoDir > -30) angBracoDir -= 5;
+            if (angBracoDir > -80) angBracoDir -= 5;
             break;
 
         // Antebraço Direito
         case 'h':
-            if (angAntebracoDir < 100) angAntebracoDir += 5;
+            if (angAntebracoDir < 50) angAntebracoDir += 5;
             break;
         case 'j':
-            if (angAntebracoDir > 0) angAntebracoDir -= 5;
+            if (angAntebracoDir > -50) angAntebracoDir -= 5;
             break;
 
         // Mão Direita
@@ -303,18 +295,18 @@ void Teclado(unsigned char key, int x, int y) {
 
         // Perna Esquerda
         case 'i':
-            if (angPernaEsq < 60) angPernaEsq += 5;
+            if (angPernaEsq < 50) angPernaEsq += 5;
             break;
         case 'o':
-            if (angPernaEsq > -30) angPernaEsq -= 5;
+            if (angPernaEsq > -50) angPernaEsq -= 5;
             break;
 
         // Panturrilha Esquerda
         case 'k':
-            if (angPanturrilhaEsq < 90) angPanturrilhaEsq += 5;
+            if (angPanturrilhaEsq < 100) angPanturrilhaEsq += 5;
             break;
         case 'l':
-            if (angPanturrilhaEsq > 0) angPanturrilhaEsq -= 5;
+            if (angPanturrilhaEsq > -50) angPanturrilhaEsq -= 5;
             break;
 
         // Pé Esquerdo
@@ -322,23 +314,23 @@ void Teclado(unsigned char key, int x, int y) {
             if (angPeEsq < 30) angPeEsq += 5;
             break;
         case '.':
-            if (angPeEsq > -15) angPeEsq -= 5;
+            if (angPeEsq > -30) angPeEsq -= 5;
             break;
 
         // Perna Direita
         case '7':
-            if (angPernaDir < 60) angPernaDir += 5;
+            if (angPernaDir < 50) angPernaDir += 5;
             break;
         case '8':
-            if (angPernaDir > -30) angPernaDir -= 5;
+            if (angPernaDir > -50) angPernaDir -= 5;
             break;
 
         // Panturrilha Direita
         case '4':
-            if (angPanturrilhaDir < 90) angPanturrilhaDir += 5;
+            if (angPanturrilhaDir < 50) angPanturrilhaDir += 5;
             break;
         case '5':
-            if (angPanturrilhaDir > 0) angPanturrilhaDir -= 5;
+            if (angPanturrilhaDir > -100) angPanturrilhaDir -= 5;
             break;
 
         // Pé Direito
@@ -346,7 +338,7 @@ void Teclado(unsigned char key, int x, int y) {
             if (angPeDir < 30) angPeDir += 5;
             break;
         case '2':
-            if (angPeDir > -15) angPeDir -= 5;
+            if (angPeDir > -30) angPeDir -= 5;
             break;
 
         // Cabeça
@@ -370,6 +362,27 @@ void Inicializa(void) {
     gluOrtho2D(-10, 10, -10, 10);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+}
+
+// --- Display ---
+void Display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    DesenhaCenario(cenario);
+    DesenhaPersonagemHier(personagem);
+    glutSwapBuffers();
+}
+
+// Função de callback para redimensionamento
+void Redimensionar(int w, int h) {
+    if (w == h) {
+        glViewport(0, 0, w, h);
+    } else if (w > h) {
+        int x = (w - h) / 2;
+        glViewport(x, 0, h, h);
+    } else {
+        int y = (h - w) / 2;
+        glViewport(0, y, w, w);
+    }
 }
 
 // --- Programa principal ---
@@ -403,11 +416,12 @@ int main(int argc, char **argv) {
     cenario.planeta2 = LerPoligono("planeta2.txt");
 
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1000, 1000);
     glutCreateWindow("Personagem Hierarquico");
     Inicializa();
     glutDisplayFunc(Display);
+    glutReshapeFunc(Redimensionar);
     glutKeyboardFunc(Teclado);
     glutMainLoop();
 
