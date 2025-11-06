@@ -2,15 +2,14 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 
-// --- Estruturas ---
 typedef struct {
     float x, y;
 } Ponto;
 
 typedef struct {
-    int n;                 // número de vértices
-    unsigned char r, g, b; // cor (0-255)
-    Ponto *v;              // vetor de vértices
+    int n;                 // Número de vértices
+    unsigned char r, g, b; // Cor (0-255)
+    Ponto *v;              // Vetor de vértices
 } Poligono;
 
 typedef struct {
@@ -45,7 +44,7 @@ typedef struct{
     Poligono planeta2;
 } Cenario;
 
-// --- Ângulos para os movimentos gerais ---
+// Ângulos para os movimentos gerais
 float tx = 0.0f, ty = 0.0f;
 float anguloGeral = 0.0f;
 float escala = 1.0f;
@@ -53,7 +52,7 @@ float passoTrans = 0.2f;
 float passoRot = 5.0f;
 float passoEscala = 0.05f;
 
-// --- Ângulos locais das articulações ---
+// Ângulos locais das articulações
 float angBracoEsq = 0, angBracoDir = 0;
 float angAntebracoEsq = 0, angAntebracoDir = 0;
 float angMaoEsq = 0, angMaoDir = 0;
@@ -62,7 +61,7 @@ float angPanturrilhaEsq = 0, angPanturrilhaDir = 0;
 float angPeEsq = 0, angPeDir = 0;
 float angCabeca = 0;
 
-// --- Funções ---
+// Função para ler polígonos a partir de um .txt
 Poligono LerPoligono(const char *nomeArquivo) {
     FILE *f = fopen(nomeArquivo, "r");
     if (!f) {
@@ -80,8 +79,8 @@ Poligono LerPoligono(const char *nomeArquivo) {
     return p;
 }
 
+// Desenha polígono e contorno
 void DesenhaPoligono(Poligono p) {
-
     glColor3ub(p.r, p.g, p.b);
     glBegin(GL_POLYGON);
     for (int i = 0; i < p.n; i++)
@@ -94,30 +93,29 @@ void DesenhaPoligono(Poligono p) {
     for (int i = 0; i < p.n; i++)
         glVertex2f(p.v[i].x, p.v[i].y);
     glEnd();
-    
 }
 
-// --- Desenha personagem hierarquicamente ---
-void DesenhaPersonagemHier(Personagem p) {
+// Desenha personagem hierarquicamente
+void DesenhaPersonagemHierarquico(Personagem p) {
     glPushMatrix();
 
         glTranslatef(tx, ty, 0);
-        glRotatef(anguloGeral, 0, 0, 1);
+        glRotatef(anguloGeral, 0, 0, 1); // Ângulo para rotação do corpo (geral)
         glScalef(escala, escala, 1);
 
         // Perna esquerda
         glPushMatrix();
-            glTranslatef(-0.54, -0.58, 0); // quadril
+            glTranslatef(-0.54, -0.58, 0);
             glRotatef(angPernaEsq, 0, 0, 1); // Ângulo para rotação da perna esq.
             DesenhaPoligono(p.coxaEsq);
 
             glPushMatrix();
-                glTranslatef(-1.26, -3.55, 0); // joelho
+                glTranslatef(-1.26, -3.55, 0);
                 glRotatef(angPanturrilhaEsq, 0, 0, 1); // Ângulo para rotação do joelho esq.
                 DesenhaPoligono(p.panturrilhaEsq);
 
                 glPushMatrix();
-                    glTranslatef(-1.0, -2.83, 0); // pé
+                    glTranslatef(-1.0, -2.83, 0);
                     glRotatef(angPeEsq, 0, 0, 1); // Ângulo para rotação do pé esq.
                     DesenhaPoligono(p.peEsq);
                 glPopMatrix();
@@ -126,17 +124,17 @@ void DesenhaPersonagemHier(Personagem p) {
 
         // Perna direita
         glPushMatrix();
-            glTranslatef(0.54, -0.58, 0); // quadril
+            glTranslatef(0.54, -0.58, 0);
             glRotatef(angPernaDir, 0, 0, 1); // Ângulo para rotação da perna dir.
             DesenhaPoligono(p.coxaDir);
 
             glPushMatrix();
-                glTranslatef(1.26, -3.55, 0); // joelho
+                glTranslatef(1.26, -3.55, 0);
                 glRotatef(angPanturrilhaDir, 0, 0, 1); // Ângulo para rotação do joelho dir.
                 DesenhaPoligono(p.panturrilhaDir);
 
                 glPushMatrix();
-                    glTranslatef(1.0, -2.83, 0); // pé
+                    glTranslatef(1.0, -2.83, 0);
                     glRotatef(angPeDir, 0, 0, 1); // Ângulo para rotação do pé dir.
                     DesenhaPoligono(p.peDir);
                 glPopMatrix();
@@ -149,17 +147,17 @@ void DesenhaPersonagemHier(Personagem p) {
 
         // Braço direito
         glPushMatrix();
-            glTranslatef(0.81, 2.77, 0); // ombro
+            glTranslatef(0.81, 2.77, 0);
             glRotatef(angBracoDir, 0, 0, 1); // Ângulo para rotação no ombro dir.
             DesenhaPoligono(p.bracoDir);
 
             glPushMatrix();
-                glTranslatef(0.69, -0.03, 0); // cotovelo
+                glTranslatef(0.69, -0.03, 0);
                 glRotatef(angAntebracoDir, 0, 0, 1); // Ângulo para rotação no cotovelo dir.
                 DesenhaPoligono(p.antebracoDir);
 
                 glPushMatrix();
-                    glTranslatef(0.62, 0.26, 0); // mão
+                    glTranslatef(0.62, 0.26, 0);
                     glRotatef(angMaoDir, 0, 0, 1); // Ângulo para rotação na mão dir.
                     DesenhaPoligono(p.maoDir);
                 glPopMatrix();
@@ -168,24 +166,24 @@ void DesenhaPersonagemHier(Personagem p) {
 
         // Braço esquerdo
         glPushMatrix();
-            glTranslatef(-0.81, 2.77, 0); // ombro
+            glTranslatef(-0.81, 2.77, 0);
             glRotatef(angBracoEsq, 0, 0, 1); // Ângulo para rotação no ombro esq.
             DesenhaPoligono(p.bracoEsq);
 
             glPushMatrix();
-                glTranslatef(-0.69, -0.03, 0); // cotovelo
+                glTranslatef(-0.69, -0.03, 0);
                 glRotatef(angAntebracoEsq, 0, 0, 1); // Ângulo para rotação no cotovelo esq.
                 DesenhaPoligono(p.antebracoEsq);
 
                 glPushMatrix();
-                    glTranslatef(-0.62, 0.26, 0); // mão
+                    glTranslatef(-0.62, 0.26, 0);
                     glRotatef(angMaoEsq, 0, 0, 1); // Ângulo para rotação na mão esq.
                     DesenhaPoligono(p.maoEsq);
                 glPopMatrix();
             glPopMatrix();
         glPopMatrix();
 
-        // Cabeça (posição relativa ao corpo)
+        // Cabeça
         glPushMatrix();
             glTranslatef(0, 3.17, 0);
             glRotatef(angCabeca, 0, 0, 1); // Ângulo para rotação no pescoço
@@ -209,29 +207,30 @@ void DesenhaCenario(Cenario c){
     DesenhaPoligono(c.planeta2);
 }
 
-// --- Variável global ---
+// Variáveis globais
 Personagem personagem;
 Cenario cenario;
 
+// Função de callback para entrada do teclado
 void Teclado(unsigned char key, int x, int y) {
     switch (key) {
-        // --- Translação ---
+        // Translação
         case 'w': ty += passoTrans; break;
         case 's': ty -= passoTrans; break;
         case 'a': tx -= passoTrans; break;
         case 'd': tx += passoTrans; break;
 
-        // --- Rotação ---
+        // Rotação
         case 'q': anguloGeral += passoRot; break;
         case 'e': anguloGeral -= passoRot; break;
 
-        // --- Escala ---
+        // Escala
         case 'z': escala += passoEscala; break;
         case 'x': escala -= passoEscala; 
                   if (escala < 0.1f) escala = 0.1f; 
                   break;
 
-        // --- Reset ---
+        // Reset
         case '3':
             tx = ty = anguloGeral = 0;
             angBracoEsq = 0, angBracoDir = 0;
@@ -351,10 +350,9 @@ void Teclado(unsigned char key, int x, int y) {
 
     }
 
-    glutPostRedisplay(); // redesenha após qualquer tecla
+    glutPostRedisplay(); // Redesenha após qualquer transformação
 }
 
-// --- Inicialização OpenGL ---
 void Inicializa(void) {
     glClearColor(0.0f, 0.0f, 0.2f, 1.0f);
     glMatrixMode(GL_PROJECTION);
@@ -364,11 +362,10 @@ void Inicializa(void) {
     glLoadIdentity();
 }
 
-// --- Display ---
 void Display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     DesenhaCenario(cenario);
-    DesenhaPersonagemHier(personagem);
+    DesenhaPersonagemHierarquico(personagem);
     glutSwapBuffers();
 }
 
@@ -385,7 +382,7 @@ void Redimensionar(int w, int h) {
     }
 }
 
-// --- Programa principal ---
+// Programa principal
 int main(int argc, char **argv) {
     personagem.peEsq = LerPoligono("pe_esq.txt");
     personagem.panturrilhaEsq = LerPoligono("panturrilha_esq.txt");
@@ -418,7 +415,7 @@ int main(int argc, char **argv) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1000, 1000);
-    glutCreateWindow("Personagem Hierarquico");
+    glutCreateWindow("Gamora Articulada 2D - OpenGL");
     Inicializa();
     glutDisplayFunc(Display);
     glutReshapeFunc(Redimensionar);
