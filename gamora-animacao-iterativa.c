@@ -362,13 +362,6 @@ void Inicializa(void) {
     glLoadIdentity();
 }
 
-void Display(void) {
-    glClear(GL_COLOR_BUFFER_BIT);
-    DesenhaCenario(cenario);
-    DesenhaPersonagemHierarquico(personagem);
-    glutSwapBuffers();
-}
-
 // Função de callback para redimensionamento
 void Redimensionar(int w, int h) {
     if (w == h) {
@@ -382,8 +375,7 @@ void Redimensionar(int w, int h) {
     }
 }
 
-// Programa principal
-int main(int argc, char **argv) {
+void LerPoligonos(void){
     personagem.peEsq = LerPoligono("pe_esq.txt");
     personagem.panturrilhaEsq = LerPoligono("panturrilha_esq.txt");
     personagem.coxaEsq = LerPoligono("coxa_esq.txt");
@@ -411,7 +403,19 @@ int main(int argc, char **argv) {
     cenario.chao = LerPoligono("chao.txt");
     cenario.planeta1 = LerPoligono("planeta1.txt");
     cenario.planeta2 = LerPoligono("planeta2.txt");
+}
 
+void Display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    DesenhaCenario(cenario);
+    DesenhaPersonagemHierarquico(personagem);
+    glutSwapBuffers();
+}
+
+// Programa principal
+int main(int argc, char **argv) {
+
+    LerPoligonos();
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(1000, 1000);
